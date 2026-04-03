@@ -1,10 +1,19 @@
-function renderBooks() {
-  const booksWrapper = document.querySelector('.books');
+function renderBooks(filter) {
+  const booksWrapper = document.querySelector(".books");
 
   const books = getBooks();
 
-  const booksHtml = books.map((book) => {
-    return `<div class="book">
+  if (filter == "LOW_TO_HIGH") {
+    books.sort((a, b) => (a.salePrice || a.originalPrice ) - (b.salePrice || b.originalPrice));
+  } else if (filter == "HIGH_TO_LOW") {
+    books.sort((a, b) => (b.salePrice || b.originalPrice) - (a.salePrice || a.originalPrice));
+  } else if (filter == "RATING") {
+    books.sort((a, b) => b.rating - a.rating);
+  }
+
+  const booksHtml = books
+    .map((book) => {
+      return `<div class="book">
     <figure class="book__img--wrapper">
       <img class="book__img" src="${book.url}" alt="" />
     </figure>
@@ -12,29 +21,47 @@ function renderBooks() {
       ${book.title}
     </div>
     <div class="book__ratings">
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star-half-alt"></i>
+      ${ratingsHTML(book.rating)}
     </div>
     <div class="book__price">
-      <span class="book__price--normal">$${book.originalPrice}</span> $${book.salePrice}
+      ${priceHTML(book.originalPrice, book.salePrice)}
     </div>
-  </div>`
-  }).join("");
+  </div>`;
+    })
+    .join("");
 
-  
-  booksWrapper.innerHTML = booksHtml
-  console.log(booksHtml)
-  //booksWrapper.innerHTML = 
-  
+  booksWrapper.innerHTML = booksHtml;
 }
 
-setTimeout(() => {
-  renderBooks();
-})
+function priceHTML(originalPrice, salePrice){
+  if (!salePrice) {
+    return `$${originalPrice.toFixed(2)}`
+  }
+  else {
+    return `<span class="book__price--normal">$${originalPrice.toFixed(2)}</span>$${salePrice.toFixed(2)}`
+  }
+  console.log(originalPrice, salePrice)
+}
 
+function ratingsHTML(rating) {
+  let ratingHTML = "";
+
+  for (let i = 0; i < Math.floor(rating); ++i) {
+    ratingHTML += '<i class="fas fa-star"></i>';
+  }
+
+  if (!Number.isInteger(rating)) {
+    ratingHTML += '<i class="fas fa-star-half-alt"></i>';
+  }
+
+  return ratingHTML;
+}
+
+function filterBooks(event) {
+  renderBooks(event.target.value);
+}
+
+setTimeout(renderBooks, 100);
 
 // FAKE DATA
 function getBooks() {
@@ -42,7 +69,7 @@ function getBooks() {
     {
       id: 1,
       title: "Crack the Coding Interview",
-                url: "assets/crack the coding interview.png",
+      url: "assets/crack the coding interview.png",
       originalPrice: 49.95,
       salePrice: 14.95,
       rating: 4.5,

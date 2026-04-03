@@ -6,10 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Library</title>
     <link rel="stylesheet" href="styles.css" />
-    <script
-      src="https://kit.fontawesome.com/c8e4d183c2.js"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://kit.fontawesome.com/02386828e4.js" crossorigin="anonymous"></script>
     <script src="index.js"></script>
     <script src="books.js"></script>
   </head>
@@ -59,7 +56,7 @@
               <h2 class="section__title books__header--title">
                 All <span class="purple">Books</span>
               </h2>
-              <select id="fitler">
+              <select id="fitler" onchange="filterBooks(event)">
                 <option value="" disabled selected>Sort</option>
                 <option value="LOW_TO_HIGH">Price, Low to High</option>
                 <option value="HIGH_TO_LOW">Price, High to Low</option>
